@@ -1,4 +1,5 @@
-﻿using MvcAuthentication.Core.Model.Abstracts;
+﻿using Microsoft.EntityFrameworkCore;
+using MvcAuthentication.Core.Model.Abstracts;
 using MvcAuthentication.Core.State;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.ManyToMany
 {
-    public class LevelQuestion
+    public class AnsweredQuestion
     {
         [Key]
         public int Id { get; set; }

@@ -3,7 +3,7 @@
 }
 
 <div class="container border shadow-lg" style="padding:20px;">
-    <form method="post" asp-action="LoginUser">
+    <form method="post" asp-action="RegisterUser">
         <div class="mb-3 form-group row">
             <div class="col-3">
                 <label class="form-label" asp-for="Username"></label>
@@ -20,7 +20,7 @@
                 <input class="form-control" asp-for="Password" type="password"/>
             </div>
         </div>
-        <button type="submit" class="btn btn-dark shadow">Login</button>
-        <button asp-action="Register" class="btn btn-primary shadow float-end">Register new Account</button>
+        <button type="submit" class="btn btn-dark shadow">Create Account</button>
+        <button asp-action="Login" class="btn btn-primary shadow float-end">Login with existing account</button>
     </form>
 </div>

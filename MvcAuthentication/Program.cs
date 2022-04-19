@@ -1,3 +1,6 @@
+global using MvcAuthentication.Core.Data;
+global using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", options =>
@@ -9,6 +12,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Admin", 
         policy => policy.RequireClaim("Role", "Admin"));
 });
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        x => x.MigrationsAssembly("MvcAuthentication.Core"));
+});
+
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

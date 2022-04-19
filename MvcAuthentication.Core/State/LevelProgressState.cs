@@ -1,26 +1,34 @@
-﻿using MvcAuthentication.Core.Model.Abstracts;
+﻿using MvcAuthentication.Core.ManyToMany;
+using MvcAuthentication.Core.Model.Abstracts;
+using MvcAuthentication.Core.User;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.State
 {
-    public abstract class LevelProgressState
+    public class LevelProgressState
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required]
+        [MaxLength(30)]
         public string LevelName { get; set; }
-        public List<Question> TotalQuestions { get; set; }
-        public List<Question> AnsweredQuestions { get; set; }
-        public List<Question> LeftQuestions { get; set; }
+
+        public List<LevelQuestion> LevelQuestions { get; set; }
+        public List<AnsweredQuestion> AnsweredQuestions { get; set; }
+
+        [Range(0, 100)]
         public float ProgressPrecentage { get; set; }
 
-        public LevelProgressState()
-        {
-            TotalQuestions = new List<Question>();
-            AnsweredQuestions = new List<Question>();
-            LeftQuestions = new List<Question>();
-        }
+        [Required]
+        public bool IsFinished { get; set; } = false;
+
+        [Required]
+        public Account Account { get; set; }
     }
 }

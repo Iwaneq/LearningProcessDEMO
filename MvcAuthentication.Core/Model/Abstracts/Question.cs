@@ -1,6 +1,7 @@
 ﻿using MvcAuthentication.Core.ManyToMany;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +12,20 @@ namespace MvcAuthentication.Core.Model.Abstracts
     {
         OneAnswer
     }
-    public abstract class Question
+    public class Question
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required]
         public QuestionType QuestionType { get; set; }
+
+        [MaxLength(50)]
         public string QuestionText { get; set; } = string.Empty;
-        public List<Answer> Answers { get; set; } = new List<Answer>();
+
         public Answer GoodAnswer { get; set; }
         public List<QuestionAnswer> QuestionAnswers { get; set; }
+        public List<LevelQuestion> LevelQuestions { get; set; }
+        public List<AnsweredQuestion> AnsweredQuestions { get; set; }
     }
 }
