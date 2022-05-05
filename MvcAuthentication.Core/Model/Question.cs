@@ -26,6 +26,6 @@ namespace MvcAuthentication.Core.Model.Abstracts
         public Answer GoodAnswer { get; set; }
         public List<QuestionAnswer> QuestionAnswers { get; set; }
         public List<LevelQuestion> LevelQuestions { get; set; }
-        public List<AnsweredQuestion> AnsweredQuestions { get; set; }
+        public List<UnansweredQuestion> UnansweredQuestions { get; set; }
     }
 }

@@ -17,4 +17,12 @@
     <ProjectReference Include="..\MvcAuthentication.Core\MvcAuthentication.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Level\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Level\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

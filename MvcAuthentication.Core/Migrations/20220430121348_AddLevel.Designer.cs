@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcAuthentication.Core.Data;
 
@@ -10,9 +11,10 @@ using MvcAuthentication.Core.Data;
 namespace MvcAuthentication.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220430121348_AddLevel")]
+    partial class AddLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,6 +22,29 @@ namespace MvcAuthentication.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("MvcAuthentication.Core.ManyToMany.AnsweredQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("LevelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LevelId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("AnsweredQuestions");
+                });
 
             modelBuilder.Entity("MvcAuthentication.Core.ManyToMany.LevelQuestion", b =>
                 {
@@ -65,29 +90,6 @@ namespace MvcAuthentication.Core.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("QuestionAnswers");
-                });
-
-            modelBuilder.Entity("MvcAuthentication.Core.ManyToMany.UnansweredQuestion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("LevelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LevelId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("UnansweredQuestion");
                 });
 
             modelBuilder.Entity("MvcAuthentication.Core.Model.Abstracts.Answer", b =>
@@ -203,6 +205,25 @@ namespace MvcAuthentication.Core.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("MvcAuthentication.Core.ManyToMany.AnsweredQuestion", b =>
+                {
+                    b.HasOne("MvcAuthentication.Core.State.LevelProgressState", "LevelProgressState")
+                        .WithMany("AnsweredQuestions")
+                        .HasForeignKey("LevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MvcAuthentication.Core.Model.Abstracts.Question", "Question")
+                        .WithMany("AnsweredQuestions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LevelProgressState");
+
+                    b.Navigation("Question");
+                });
+
             modelBuilder.Entity("MvcAuthentication.Core.ManyToMany.LevelQuestion", b =>
                 {
                     b.HasOne("MvcAuthentication.Core.Model.Level", "Level")
@@ -237,25 +258,6 @@ namespace MvcAuthentication.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Answer");
-
-                    b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("MvcAuthentication.Core.ManyToMany.UnansweredQuestion", b =>
-                {
-                    b.HasOne("MvcAuthentication.Core.State.LevelProgressState", "LevelProgressState")
-                        .WithMany("UnansweredQuestions")
-                        .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MvcAuthentication.Core.Model.Abstracts.Question", "Question")
-                        .WithMany("UnansweredQuestions")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LevelProgressState");
 
                     b.Navigation("Question");
                 });
@@ -297,11 +299,11 @@ namespace MvcAuthentication.Core.Migrations
 
             modelBuilder.Entity("MvcAuthentication.Core.Model.Abstracts.Question", b =>
                 {
+                    b.Navigation("AnsweredQuestions");
+
                     b.Navigation("LevelQuestions");
 
                     b.Navigation("QuestionAnswers");
-
-                    b.Navigation("UnansweredQuestions");
                 });
 
             modelBuilder.Entity("MvcAuthentication.Core.Model.Level", b =>
@@ -311,7 +313,7 @@ namespace MvcAuthentication.Core.Migrations
 
             modelBuilder.Entity("MvcAuthentication.Core.State.LevelProgressState", b =>
                 {
-                    b.Navigation("UnansweredQuestions");
+                    b.Navigation("AnsweredQuestions");
                 });
 
             modelBuilder.Entity("MvcAuthentication.Core.User.Account", b =>

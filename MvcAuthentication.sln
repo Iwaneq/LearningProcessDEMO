@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcAuthentication", "MvcAuthentication\MvcAuthentication.csproj", "{1F2D204D-FA4D-48A4-BCA2-ED22E4E39B6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAuthentication.Core", "MvcAuthentication.Core\MvcAuthentication.Core.csproj", "{948A399F-1AAC-445E-98A2-57AD26C118AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcAuthentication.Core", "MvcAuthentication.Core\MvcAuthentication.Core.csproj", "{948A399F-1AAC-445E-98A2-57AD26C118AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

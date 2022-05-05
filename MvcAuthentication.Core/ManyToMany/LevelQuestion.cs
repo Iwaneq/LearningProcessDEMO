@@ -1,4 +1,5 @@
-﻿using MvcAuthentication.Core.Model.Abstracts;
+﻿using MvcAuthentication.Core.Model;
+using MvcAuthentication.Core.Model.Abstracts;
 using MvcAuthentication.Core.State;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace MvcAuthentication.Core.ManyToMany
         [Key]
         public int Id { get; set; }
         public int LevelId { get; set; }
-        public LevelProgressState LevelProgressState { get; set; }
+        public Level Level { get; set; }
         public int QuestionId { get; set; }
         public Question Question { get; set; }
     }

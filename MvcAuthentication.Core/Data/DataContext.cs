@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MvcAuthentication.Core.ManyToMany;
+using MvcAuthentication.Core.Model;
 using MvcAuthentication.Core.Model.Abstracts;
 using MvcAuthentication.Core.State;
 using MvcAuthentication.Core.User;
@@ -21,16 +22,17 @@ namespace MvcAuthentication.Core.Data
         public DbSet<LevelProgressState> LevelProgressStates { get; set; }
         public DbSet<LevelQuestion> LevelQuestions { get; set; }
         public DbSet<Question> Questions { get; set; }
-        public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
+        public DbSet<UnansweredQuestion> UnansweredQuestion { get; set; }
         public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<Level> Levels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             /* --- LEVEL QUESTIONS --- */
 
             modelBuilder.Entity<LevelQuestion>()
-                .HasOne(l => l.LevelProgressState)
+                .HasOne(l => l.Level)
                 .WithMany(q => q.LevelQuestions)
                 .HasForeignKey(l => l.LevelId);
 
@@ -41,14 +43,14 @@ namespace MvcAuthentication.Core.Data
 
             /* --- ANSWERED QUESTIONS --- */
 
-            modelBuilder.Entity<AnsweredQuestion>()
+            modelBuilder.Entity<UnansweredQuestion>()
                 .HasOne(l => l.LevelProgressState)
-                .WithMany(q => q.AnsweredQuestions)
+                .WithMany(q => q.UnansweredQuestions)
                 .HasForeignKey(l => l.LevelId);
 
-            modelBuilder.Entity<AnsweredQuestion>()
+            modelBuilder.Entity<UnansweredQuestion>()
                 .HasOne(l => l.Question)
-                .WithMany(q => q.AnsweredQuestions)
+                .WithMany(q => q.UnansweredQuestions)
                 .HasForeignKey(l => l.QuestionId);
 
 

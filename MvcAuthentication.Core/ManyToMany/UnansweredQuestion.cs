@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.ManyToMany
 {
-    public class AnsweredQuestion
+    public class UnansweredQuestion
     {
         [Key]
         public int Id { get; set; }

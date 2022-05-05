@@ -1,0 +1,18 @@
+﻿@model MvcAuthentication.Models.LevelViewModel
+
+@{
+    ViewData["Title"] = @Model.LevelProgressState.Level.LevelName;
+}
+<div class="text-center">
+    <h1 class="display-4">Model.Level.LevelName</h1>
+    <h3 class="display-4">Model.Level.LevelQuestions.FirstOrDefault()</h3>
+    @if (@Model.CurrentQuestion != null)
+    {
+        <div class="d-flex flex-wrap justify-content-evenly p-2 buttons-container">
+            @foreach (var answer in @Model.CurrentQuestion.QuestionAnswers)
+            {
+                <button class="btn btn-dark btn-lg my-5 shadow">@answer.Answer.AnswerText</button>
+            }
+        </div>
+    }
+</div>

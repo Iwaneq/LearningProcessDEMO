@@ -1,6 +1,6 @@
 ﻿using MvcAuthentication.Core.User;
 
-namespace MvcAuthentication.State
+namespace MvcAuthentication.Core.State
 {
     public static class AccountState
     {

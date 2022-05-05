@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MvcAuthentication.Core.Services;
 using MvcAuthentication.Models;
-using MvcAuthentication.State;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -11,13 +11,15 @@ namespace MvcAuthentication.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _dataContext;
+        private readonly LevelProgressStateAccessService _levelProgressStateAccessService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HomeController(ILogger<HomeController> logger, DataContext dataContext, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, DataContext dataContext, IHttpContextAccessor httpContextAccessor, LevelProgressStateAccessService levelProgressStateAccessService)
         {
             _logger = logger;
             _dataContext = dataContext;
             _httpContextAccessor = httpContextAccessor;
+            _levelProgressStateAccessService = levelProgressStateAccessService;
         }
 
         [Authorize]
@@ -29,7 +31,7 @@ namespace MvcAuthentication.Controllers
 
             if (isIdParsed)
             {
-                var levels = await _dataContext.LevelProgressStates.Where(x => x.Account.Id == id).ToListAsync();
+                var levels = await _levelProgressStateAccessService.GetLevelProgressStatesWithLevels(id);
 
                 return View(levels);
             }

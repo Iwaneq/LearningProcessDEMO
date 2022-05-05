@@ -1,5 +1,8 @@
 global using MvcAuthentication.Core.Data;
 global using Microsoft.EntityFrameworkCore;
+using MvcAuthentication.Core.Services;
+using MvcAuthentication.Core.Services.Identity;
+using MvcAuthentication.Core.Services.Level;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +22,18 @@ builder.Services.AddDbContext<DataContext>(options =>
         x => x.MigrationsAssembly("MvcAuthentication.Core"));
 });
 
+builder.Services.AddScoped<DrawQuestionService>();
+builder.Services.AddScoped<AccountAccessService>();
+builder.Services.AddScoped<LevelProgressStateAccessService>();
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<LoginService>();
+
+
 builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages().WithRazorPagesRoot("/Views");
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using MvcAuthentication.Core.ManyToMany;
+using MvcAuthentication.Core.Model;
 using MvcAuthentication.Core.Model.Abstracts;
 using MvcAuthentication.Core.User;
 using System;
@@ -15,12 +16,9 @@ namespace MvcAuthentication.Core.State
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(30)]
-        public string LevelName { get; set; }
+        public Level Level { get; set; }
 
-        public List<LevelQuestion> LevelQuestions { get; set; }
-        public List<AnsweredQuestion> AnsweredQuestions { get; set; }
+        public List<UnansweredQuestion> UnansweredQuestions { get; set; }
 
         [Range(0, 100)]
         public float ProgressPrecentage { get; set; }

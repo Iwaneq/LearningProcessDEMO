@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MvcAuthentication.Core.ManyToMany;
+using MvcAuthentication.Core.Services;
+using MvcAuthentication.Core.Services.Identity;
 using MvcAuthentication.Core.State;
 using MvcAuthentication.Core.User;
-using MvcAuthentication.State;
 using MvcAuthentication.Views.Account;
 using System.Security.Claims;
 
@@ -13,11 +14,18 @@ namespace MvcAuthentication.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly DataContext _dataContext;
+        private readonly AccountAccessService _accountAccessService;
+        private readonly LoginService _loginService;
+        private readonly AccountService _accountService;
 
-        public AccountController(DataContext dataContext)
+        public AccountController(DataContext dataContext, 
+            AccountAccessService accountAccessService, 
+            LoginService loginService, 
+            AccountService accountService)
         {
-            _dataContext = dataContext;
+            _accountAccessService = accountAccessService;
+            _loginService = loginService;
+            _accountService = accountService;
         }
 
         public IActionResult Index()
@@ -38,39 +46,13 @@ namespace MvcAuthentication.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterUser(Credential credentials)
         {
+            if (!ModelState.IsValid) return View();
+
             /* --- CREATE ACCOUNT ---  */
-
-            //Create new Account Model
-            Account newAccount = new Account()
-            {
-                Username = credentials.Username,
-                LevelsProgress = new List<LevelProgressState>()
-                {
-                    new LevelProgressState()
-                    {
-                        IsFinished = false,
-                        LevelName = "FirstLevel",
-                        ProgressPrecentage = 0,
-                        LevelQuestions = new List<LevelQuestion>()
-                        {
-                            new LevelQuestion() 
-                            {
-                                
-                            }
-                        }
-                    }
-                }
-            };
-
-            //Hash Password
-            var hasher = new PasswordHasher<Account>();
-            var passwordHash = hasher.HashPassword(newAccount, credentials.Password);
-
-            newAccount.PasswordHash = passwordHash;
+            var newAccount = await _accountService.CreateAccount(credentials);
 
             //Save Account Model
-            _dataContext.Accounts.Add(newAccount);
-            await _dataContext.SaveChangesAsync();
+            await _accountAccessService.SaveAccount(newAccount);
 
             //Redirect to Index Page
             return RedirectToAction("Login");
@@ -81,36 +63,17 @@ namespace MvcAuthentication.Controllers
         {
             if (!ModelState.IsValid) return View();
 
-            //Search for username in Database
-            var account = _dataContext.Accounts
-                .Where(x => x.Username == credentials.Username)
-                //.Include(a => a.LevelsProgress)
-                .FirstOrDefault();
-
-            if (account == null) return View();
-
-            var hasher = new PasswordHasher<Account>();
-            var result = hasher.VerifyHashedPassword(account, account.PasswordHash, credentials.Password);
-
-            if (result == PasswordVerificationResult.Failed) return View();
-
-            AccountState.CurrentAccount = account;
-
-            //Create Security Context
-            var claims = new List<Claim>
+            try
             {
-                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new Claim(ClaimTypes.Name, account.Username),
-                new Claim(ClaimTypes.Country, "Poland"),
-                new Claim("Role", "Admin")
-            };
+                AccountState.CurrentAccount = await _accountAccessService.GetAccountAsync(credentials);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
 
-            //Create Identity
-            var identity = new ClaimsIdentity(claims, "CookieAuth");
-
-            //Create Claims Principal
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
-
+            //Create Security Context, Claims Principal and Sign In
+            var claimsPrincipal = _loginService.CreateClaimsPrincipal();
             await HttpContext.SignInAsync("CookieAuth", claimsPrincipal);
 
             //Redirect to Index Page
