@@ -28,9 +28,19 @@ namespace MvcAuthentication.Core.Services
                 .Include(l => l.Level)
                 .Include(l => l.UnansweredQuestions)
                 .Include(l => l.Level.LevelQuestions)
-                .ThenInclude(l => l.Question)
-                .ThenInclude(q => q.QuestionAnswers)
+                    .ThenInclude(l => l.Question)
+                        .ThenInclude(l => l.GoodAnswer)
+                .Include(l => l.Level.LevelQuestions)
+                    .ThenInclude(l => l.Question)
+                            .ThenInclude(q => q.QuestionAnswers)
+                                .ThenInclude(q => q.Answer)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateLevelState(LevelProgressState state)
+        {
+            _dataContext.LevelProgressStates.Update(state);
+            await _dataContext.SaveChangesAsync();
         }
     }
 }

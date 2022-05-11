@@ -8,7 +8,14 @@
     <div class="d-flex flex-wrap justify-content-evenly p-2 buttons-container">
     @foreach(var level in Model)
     {
-        <a class="btn btn-dark btn-lg my-5 shadow" asp-controller="Level" asp-action="GetLevel" asp-route-id="@level.Id">@level.Level.LevelName</a>
+            if (level.IsFinished)
+            {
+                <div class="btn btn-dark disabled btn-lg my-5 shadow">@level.Level.LevelName</div>
+            }
+            else
+            {
+                <a class="btn btn-dark btn-lg my-5 shadow" asp-controller="Level" asp-action="GetLevel" asp-route-id="@level.Id">@level.Level.LevelName</a>
+            }
     }
     </div>
 </div>

@@ -1,17 +1,28 @@
-﻿@model MvcAuthentication.Models.LevelViewModel
-
+﻿@model MvcAuthentication.Core.ViewModels.LevelViewModel
 @{
     ViewData["Title"] = @Model.LevelProgressState.Level.LevelName;
 }
+
+@using MvcAuthentication.Core.Model.Abstracts
+@using MvcAuthentication.Core.Services.Level
+@using MvcAuthentication.Core.State
+
 <div class="text-center">
-    <h1 class="display-4">Model.Level.LevelName</h1>
-    <h3 class="display-4">Model.Level.LevelQuestions.FirstOrDefault()</h3>
-    @if (@Model.CurrentQuestion != null)
+    @if(Model.LevelProgressState != null)
+    {
+        <h1 class="display-4">@Model.LevelProgressState.Level.LevelName</h1>
+        <h3 class="display-4">@Model.CurrentQuestion.QuestionText</h3>
+    }
+    else
+    {
+        <h1 class="display-4">Loading level...</h1>
+    }
+    @if (Model.CurrentQuestion != null)
     {
         <div class="d-flex flex-wrap justify-content-evenly p-2 buttons-container">
-            @foreach (var answer in @Model.CurrentQuestion.QuestionAnswers)
+            @foreach (var answer in Model.CurrentQuestion.QuestionAnswers)
             {
-                <button class="btn btn-dark btn-lg my-5 shadow">@answer.Answer.AnswerText</button>
+                <a class="btn btn-dark btn-lg my-5 shadow" asp-action="VerifyAnswer" asp-route-answerId="@answer.AnswerId">@answer.Answer.AnswerText</a>
             }
         </div>
     }

@@ -18,11 +18,11 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"),
         x => x.MigrationsAssembly("MvcAuthentication.Core"));
 });
 
-builder.Services.AddScoped<DrawQuestionService>();
+builder.Services.AddScoped<QuestionService>();
 builder.Services.AddScoped<AccountAccessService>();
 builder.Services.AddScoped<LevelProgressStateAccessService>();
 builder.Services.AddScoped<AccountService>();
@@ -34,6 +34,10 @@ builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().WithRazorPagesRoot("/Views");
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+});
 
 var app = builder.Build();
 
@@ -49,6 +53,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors(options => options.AllowAnyOrigin());
 
 app.UseAuthentication();
 app.UseAuthorization();

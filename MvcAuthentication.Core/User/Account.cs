@@ -19,6 +19,7 @@ namespace MvcAuthentication.Core.User
         public string Username { get; set; }
 
         [Required]
+        [MaxLength(150)]
         public string PasswordHash { get; set; }
 
         public List<LevelProgressState> LevelsProgress { get; set; }

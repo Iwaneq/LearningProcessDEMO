@@ -1,4 +1,5 @@
-﻿using MvcAuthentication.Core.ManyToMany;
+﻿using Microsoft.AspNetCore.Mvc;
+using MvcAuthentication.Core.ManyToMany;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,8 @@ namespace MvcAuthentication.Core.Model.Abstracts
     {
         OneAnswer
     }
+
+    [BindProperties]
     public class Question
     {
         [Key]
