@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MvcAuthentication.Core.Data;
 using MvcAuthentication.Core.ManyToMany;
+using MvcAuthentication.Core.Services.Identity.Interfaces;
 using MvcAuthentication.Core.State;
 using MvcAuthentication.Core.User;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.Services.Identity
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private readonly DataContext _dataContext;
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MvcAuthentication.Core.Data;
+using MvcAuthentication.Core.Services.DataAccess.Interfaces;
 using MvcAuthentication.Core.State;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.Services
 {
-    public class LevelProgressStateAccessService : BaseDataAccessService
+    public class LevelProgressStateAccessService : BaseDataAccessService, ILevelProgressStateAccessService
     {
         public LevelProgressStateAccessService(DataContext dataContext) : base(dataContext)
         {

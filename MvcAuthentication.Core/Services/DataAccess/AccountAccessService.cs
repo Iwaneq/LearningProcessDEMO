@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MvcAuthentication.Core.Data;
+using MvcAuthentication.Core.Services.DataAccess.Interfaces;
 using MvcAuthentication.Core.User;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.Services
 {
-    public class AccountAccessService : BaseDataAccessService
+    public class AccountAccessService : BaseDataAccessService, IAccountAccessService
     {
         public AccountAccessService(DataContext dataContext) : base(dataContext)
         {

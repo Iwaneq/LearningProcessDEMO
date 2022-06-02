@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcAuthentication", "MvcAut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcAuthentication.Core", "MvcAuthentication.Core\MvcAuthentication.Core.csproj", "{948A399F-1AAC-445E-98A2-57AD26C118AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GermanLearningAPI", "GermanLearningAPI\GermanLearningAPI.csproj", "{A56F4A13-B3D7-4EF4-8EA2-4E8CD737194C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{948A399F-1AAC-445E-98A2-57AD26C118AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{948A399F-1AAC-445E-98A2-57AD26C118AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{948A399F-1AAC-445E-98A2-57AD26C118AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A56F4A13-B3D7-4EF4-8EA2-4E8CD737194C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A56F4A13-B3D7-4EF4-8EA2-4E8CD737194C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A56F4A13-B3D7-4EF4-8EA2-4E8CD737194C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A56F4A13-B3D7-4EF4-8EA2-4E8CD737194C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

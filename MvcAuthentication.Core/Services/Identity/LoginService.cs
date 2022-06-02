@@ -1,4 +1,5 @@
-﻿using MvcAuthentication.Core.State;
+﻿using MvcAuthentication.Core.Services.Identity.Interfaces;
+using MvcAuthentication.Core.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MvcAuthentication.Core.Services.Identity
 {
-    public class LoginService
+    public class LoginService : ILoginService
     {
         public ClaimsPrincipal CreateClaimsPrincipal()
         {
