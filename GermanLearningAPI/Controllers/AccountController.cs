@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using GermanLearningAPI.Tags;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,9 @@ using MvcAuthentication.Core.Services.DataAccess.Interfaces;
 using MvcAuthentication.Core.Services.Identity.Interfaces;
 using MvcAuthentication.Core.State;
 using MvcAuthentication.Core.User;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using System.Security;
 using System.Security.Claims;
 using System.Text;
 
@@ -59,36 +63,60 @@ namespace GermanLearningAPI.Controllers
 
             if (account == null) return NotFound();
 
-            //Create Security Context, Claims Principal and Sign In
-            var refreshToken = new Guid();
-            var accessToken = GenerateToken(account);
+            //Generate Refresh and Access Tokens
+            var refreshToken = Guid.NewGuid().ToString();
+            var accessToken = _loginService.GenerateToken(account);
 
-            Response.Cookies.Append("X-Refresh-Token", refreshToken.ToString(), new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+            //Save Refresh Token to Account
+            account.RefreshToken = refreshToken;
+            await _accountAccessService.UpdateAccount(account);
+
+            //Save Tokens to Cookies
+            Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict, Expires = DateTime.UtcNow.AddDays(7) });
             Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
-
 
             return Ok();
         }
 
-        private string GenerateToken(Account account)
+        [HttpGet("RefreshToken")]
+        public async Task<IActionResult> RefreshToken()
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            //Get Refresh Token
+            var refreshToken = Request.Cookies["X-Refresh-Token"];
 
-            var claims = new[]
-            {
-                new Claim(type: "ID", account.Id.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, account.Username)
-            };
+            //Validate Refresh Token and Check if it's attached to any account
+            if (refreshToken == null) return NotFound("Refresh Token");
 
+            var account = await _accountAccessService.GetAccountByRefreshTokenAsync(refreshToken);
 
+            if (account == null) return NotFound();
+
+            //Generate new Access Token
+            var accessToken = _loginService.GenerateToken(account);
+
+            //Save Access Token
+            Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+
+            return Ok();
+        }
+
+        [HttpGet("DeleteCookies")]
+        public IActionResult DeleteCookies()
+        {
+            Response.Cookies.Delete("X-Access-Token");
+
+            return Ok();
         }
 
         [HttpGet("AuthorizeTest")]
-        [Authorize]
+        [JwtAuthorize]
         public IActionResult AuthorizeTest()
         {
-            return Ok("You are authorized!");
+            var claims = HttpContext.User.Claims;
+
+            var name = claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+
+            return Ok($"You are authorized {name}!");
         }
     }
 }

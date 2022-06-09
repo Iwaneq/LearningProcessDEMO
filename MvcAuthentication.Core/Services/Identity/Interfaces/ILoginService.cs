@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvcAuthentication.Core.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -10,5 +11,6 @@ namespace MvcAuthentication.Core.Services.Identity.Interfaces
     public interface ILoginService
     {
         ClaimsPrincipal CreateClaimsPrincipal();
+        string GenerateToken(Account account);
     }
 }

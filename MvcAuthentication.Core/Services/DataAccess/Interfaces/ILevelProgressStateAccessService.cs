@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvcAuthentication.Core.State;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace MvcAuthentication.Core.Services.DataAccess.Interfaces
 {
     public interface ILevelProgressStateAccessService
     {
-
+        Task<List<LevelProgressState>> GetLevelProgressStatesWithLevels(int accountId);
     }
 }

@@ -6,6 +6,7 @@ using MvcAuthentication.Core.Services;
 using MvcAuthentication.Core.Services.DataAccess.Interfaces;
 using MvcAuthentication.Core.Services.Identity;
 using MvcAuthentication.Core.Services.Identity.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,9 @@ builder.Services.AddAuthorization(options =>
         policy => policy.RequireClaim("Role", "Admin"));
 });
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"),
@@ -41,6 +45,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 );
 
 builder.Services.AddScoped<IAccountAccessService, AccountAccessService>();
+builder.Services.AddScoped<ILevelProgressStateAccessService, LevelProgressStateAccessService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 

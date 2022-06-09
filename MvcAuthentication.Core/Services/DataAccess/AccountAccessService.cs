@@ -33,9 +33,31 @@ namespace MvcAuthentication.Core.Services
             else return account;
         }
 
+        public async Task<Account> GetAccountByRefreshTokenAsync(string token)
+        {
+            var account = await _dataContext.Accounts
+                .Where(x => x.RefreshToken == token)
+                .FirstOrDefaultAsync();
+
+            if(account == null) throw new KeyNotFoundException();
+
+            return account;
+        }
+
+        public async Task<bool> CheckIfTokenIsUnique(string token)
+        {
+            return await _dataContext.Accounts.AnyAsync(x => x.RefreshToken == token);
+        }
+
         public async Task SaveAccount(Account account)
         {
             _dataContext.Accounts.Add(account);
+            await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAccount(Account account)
+        {
+            _dataContext.Accounts.Update(account);
             await _dataContext.SaveChangesAsync();
         }
     }

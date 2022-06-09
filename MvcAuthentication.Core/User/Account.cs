@@ -22,6 +22,9 @@ namespace MvcAuthentication.Core.User
         [MaxLength(150)]
         public string PasswordHash { get; set; }
 
+        [MaxLength(40)]
+        public string RefreshToken { get; set; }
+
         public List<LevelProgressState> LevelsProgress { get; set; }
     }
 }
